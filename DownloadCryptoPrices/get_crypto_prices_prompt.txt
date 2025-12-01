@@ -1,0 +1,68 @@
+Extract Crypto Prices → Generate SQL Insert Statements
+
+TASK
+You will receive raw HTML/text scraped from https://coinmarketcap.com website.
+From this raw data, extract only the crypto symbol and price values.
+You must then generate a SQL INSERT statement for each symbol found, using this table:
+
+CREATE TABLE [dbo].[CRYPTO_DailyPrice_M]
+(
+    [id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [symbol] VARCHAR(16) NOT NULL,
+    [price_date] DATETIME2(3) NOT NULL,
+    [price_usd] DECIMAL(19, 12) NOT NULL,
+
+    CONSTRAINT UQ_CRYPTO_DailyPrice_M_Symbol_Date 
+        UNIQUE (symbol, price_date)
+);
+
+INSERT format (this must be followed exactly):
+
+
+	INSERT INTO dbo.CRYPTO_DailyPrice_M (symbol, price_date, price_usd) 
+	VALUES ('BTC', getdate(), 86860.68);
+
+
+MAPPING RULES
+
+	From the raw CoinMarketCap data:
+		name → symbol
+		price → price_usd
+
+	SQL mapping:
+
+		symbol = extracted name
+		price_usd = extracted price
+		price_date = must always use getdate()
+
+
+
+
+REQUIRED SYMBOL LIST (use ONLY these)
+
+	Symbols:
+	ADA,AIOZ,ALGO,ATOM,AVAX,
+	Bonk,BTC,DOGE,ETH,FIL,
+	FLOKI,GALA,GRT,HBAR,ICP,
+	IMX,INJ,JasmyCoin,LCX,LINK,
+	LTC,NEAR,ONDO,PEPE,POL,QNT,
+	RENDER, Rndr,SOL,SUI,USDC,XDC,XLM,XRP
+
+Rules for symbols:
+	Search for these symbols in the raw CoinMarketCap data.
+	If a symbol exists, output exactly one SQL insert line.
+	If a symbol does not exist, skip it silently.
+	Output must remain in the order shown above—never reorder.
+	Never ask about missing symbols.
+	Do not include duplicates.
+
+OUTPUT RULES
+
+Your final answer must:
+	Return only SQL INSERT statements, no commentary.
+	Use one symbol per line.
+	Every line must end with a semicolon (;).
+	Use getdate() for all price_date values.
+	Use the price exactly as found — no formatting changes except removing currency symbols or commas.
+
+BEGIN RAW DATA (the model will extract from what comes next):
